@@ -1,0 +1,69 @@
+services:
+  backend:
+    container_name: udm-backend
+    image: udm-backend_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${PORT}:8000'
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - WHITELISTED_ORIGINS=${WHITELISTED_ORIGINS}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - PYTHON_BACKEND_URL=${PYTHON_BACKEND_URL}
+      - PYTHON_BACKEND_API_KEY=${PYTHON_BACKEND_API_KEY}
+      - PYTHON_BACKEND_TIMEOUT=${PYTHON_BACKEND_TIMEOUT}
+      - PYTHON_BACKEND_RETRY_ATTEMPTS=${PYTHON_BACKEND_RETRY_ATTEMPTS}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE}
+      - UPLOAD_PATH=${UPLOAD_PATH}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_FILE=${LOG_FILE}
+      - SWAGGER_TITLE=${SWAGGER_TITLE}
+      - SWAGGER_DESCRIPTION=${SWAGGER_DESCRIPTION}
+      - SWAGGER_VERSION=${SWAGGER_VERSION}
+      - SWAGGER_PATH=${SWAGGER_PATH}
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_DIALECT=${DATABASE_DIALECT}
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - udm
+  
+  postgres:
+    container_name: udm-uat_postgres
+    image: postgres:17.5-alpine3.22
+    ports:
+      - '${PGPORT}:${PGPORT}'
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+    volumes:
+      - pg-uat_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
+      interval: 15s
+      retries: 5
+    networks:
+      - udm
+
+networks:
+  udm:
+    driver: bridge
+
+
+volumes:
+  uploads:
+  pg-uat_data:
