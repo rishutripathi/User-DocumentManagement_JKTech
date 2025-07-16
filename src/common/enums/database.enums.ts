@@ -1,4 +1,3 @@
-// src/common/enums/database.enums.ts
 export enum UserRole {
   ADMIN = 'admin',
   EDITOR = 'editor',

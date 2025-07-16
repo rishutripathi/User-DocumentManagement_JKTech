@@ -2,6 +2,7 @@ import { IsString, IsOptional, IsArray, IsEnum, IsNumber, Min } from 'class-vali
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
+
 export class CreateDocumentDto {
   @ApiProperty({ example: 'Important Document' })
   @IsString()

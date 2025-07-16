@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import { IPasswordService } from '../interfaces/auth.interfaces';
 
 
-
 @Injectable()
 export class PasswordService implements IPasswordService {
   private readonly saltRounds = 12;

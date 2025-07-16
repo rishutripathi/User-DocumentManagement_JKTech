@@ -1,4 +1,3 @@
-// src/documents/entities/document.entity.ts
 import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 
