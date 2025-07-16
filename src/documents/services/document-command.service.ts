@@ -1,4 +1,3 @@
-// src/documents/services/document-command.service.ts
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { IDocumentRepository } from '../interfaces/document-repository.interface';
 import { PermissionService } from './permission.service';
@@ -6,6 +5,7 @@ import { StorageService } from './storage.service';
 import { User } from 'src/user/models/user.model';
 import { DocumentStatus } from 'src/common/enums/database.enums';
 import { CreateDocumentDto, UpdateDocumentDto } from '../DTO/documents.dto';
+
 
 @Injectable()
 export class DocumentCommandService {
@@ -50,7 +50,6 @@ export class DocumentCommandService {
     const can = await this.permissionService.canView(user, id);
     if (!can) throw new ForbiddenException('Access denied');
 
-    // fetch so we know filePath
     const doc = await this.documentRepo.findById(id);
     if (!doc) throw new NotFoundException('Document not found');
 

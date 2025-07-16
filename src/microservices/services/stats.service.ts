@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PythonBackendHttpClient } from './python-backend.http-client.service';
 
+
 @Injectable()
 export class StatsService {
   constructor(private readonly client: PythonBackendHttpClient) {}

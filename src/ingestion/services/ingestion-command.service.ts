@@ -7,6 +7,7 @@ import { IngestionStatus } from "src/common/enums/database.enums";
 import { UpdateUserDto } from "src/user/DTO/user.dtos";
 import { IngestionStateMachineService } from "./ingestion-state-machine.service";
 
+
 @Injectable()
 export class IngestionCommandService {
   constructor(

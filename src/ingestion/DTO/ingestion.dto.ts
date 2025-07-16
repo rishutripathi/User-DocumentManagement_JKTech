@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { Status } from 'src/common/type/status.type';
 import { IngestionStatus } from '../enum/ingestion.enum';
 
+
 export class TriggerIngestionDto {
   @ApiProperty({ example: 1 })
   @IsNumber()

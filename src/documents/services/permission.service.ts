@@ -15,7 +15,6 @@ export class PermissionService {
   }
 
   async canEdit(user: User, documentId: number): Promise<boolean> {
-    // same as view for now, but can diverge later
     return this.canView(user, documentId);
   }
 }

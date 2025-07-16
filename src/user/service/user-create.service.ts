@@ -5,6 +5,7 @@ import { CreateUserDto } from "../DTO/user.dtos";
 import { Op } from "sequelize";
 import { UserRepository } from "../repository/user.repository";
 
+
 @Injectable()
 export class UserCreateService implements IUserCreator {
   constructor(private readonly userRepository: UserRepository) {}

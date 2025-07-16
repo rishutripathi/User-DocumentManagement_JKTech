@@ -4,8 +4,12 @@ import * as bcrypt from 'bcrypt';
 import { faker } from "@faker-js/faker/.";
 import { UserRoleEnum } from "src/user/enum/user.enum";
 
+
 @Injectable()
 export class UserSeedingService implements ISeedingService {
+  seedAll(options: { userCount: number; documentCount: number; }) {
+    throw new Error('Method not implemented.');
+  }
   private readonly logger = new Logger(UserSeedingService.name);
 
   constructor(private readonly userService: IUserService) {}

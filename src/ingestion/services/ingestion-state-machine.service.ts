@@ -4,6 +4,7 @@ import { UpdateUserDto } from "src/user/DTO/user.dtos";
 import { IngestionStatus } from "../enum/ingestion.enum";
 import { User } from "src/user/models/user.model";
 
+
 @Injectable()
 export class IngestionStateMachineService {
   computeChanges(dto: UpdateUserDto): Partial<IngestionJob> {

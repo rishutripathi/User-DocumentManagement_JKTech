@@ -26,7 +26,6 @@ export class IngestionQueryService {
     const { page, limit } = filter;
     const offset = (page - 1) * limit;
 
-    // repo.findAllWithCount needs to return [jobs, totalCount]
     const [jobs, totalItems] = await this.repo.findAllWithCount({ offset, limit });
 
     const totalPages = Math.ceil(totalItems / limit);
@@ -55,7 +54,6 @@ export class IngestionQueryService {
     const { page, limit } = filter;
     const offset = (page - 1) * limit;
 
-    // same idea: findByUser already returned [jobs, total]
     const [jobs, totalItems] = await this.repo.findByUser(userId, { offset, limit });
 
     const totalPages = Math.ceil(totalItems / limit);

@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker/.";
 import { join } from "path";
 import { DocumentStatus } from "src/common/enums/database.enums";
 
+
 @Injectable()
 export class DocumentSeedingService implements ISeedingService {
   private readonly logger = new Logger(DocumentSeedingService.name);

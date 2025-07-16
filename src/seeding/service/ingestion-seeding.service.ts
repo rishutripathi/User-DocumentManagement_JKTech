@@ -3,6 +3,7 @@ import { IDocumentsService, IIngestionService, ISeedingService, IUserService } f
 import { Status } from "src/common/type/status.type";
 import { faker } from "@faker-js/faker/.";
 
+
 @Injectable()
 export class IngestionSeedingService implements ISeedingService {
   private readonly logger = new Logger(IngestionSeedingService.name);

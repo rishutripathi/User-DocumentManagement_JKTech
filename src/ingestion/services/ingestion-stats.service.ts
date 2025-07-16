@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { IIngestionReadRepo } from "../interfaces/ingestion-repositories";
 
+
 @Injectable()
 export class IngestionStatsService {
   constructor(@Inject('IngestionReadRepo') private readonly repo: IIngestionReadRepo) {}
