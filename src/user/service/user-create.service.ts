@@ -29,4 +29,25 @@ export class UserCreateService implements IUserCreator {
       message: 'User created successfully' 
     };
   }
+
+  async createBulkUsers(createUsersDto: CreateUserDto[]): Promise<any> {
+    for(let user = 0; user < createUsersDto.length; user++) {
+      const { username, email, password } = createUsersDto[user];
+
+      const existing = await this.userRepository.findOne({
+        where: { [Op.or]: [{ email }, { username }] },
+      });
+      if (existing) {
+        throw new ConflictException('User with this email or username already exists');
+      }
+
+      const saltRounds = 12;
+      const hashed = await bcrypt.hash(password, saltRounds);
+      createUsersDto[user].password = hashed;
+      await this.userRepository.create({ ...createUsersDto } as any);
+    }
+    return {
+      message: 'User created successfully'
+    };
+  }
 }

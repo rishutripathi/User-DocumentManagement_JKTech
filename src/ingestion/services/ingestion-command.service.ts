@@ -1,24 +1,22 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IIngestionWriteRepo } from "../interfaces/ingestion-repositories";
-import { DocumentsService } from "src/documents/services/documents.service";
+import { Injectable } from "@nestjs/common";
 import { User } from "src/user/models/user.model";
-import { CreateIngestionJobDto, TriggerIngestionDto } from "../DTO/ingestion.dto";
+import { CreateIngestionJobDto, UpdateIngestionJobDto } from "../DTO/ingestion.dto";
 import { IngestionStatus } from "src/common/enums/database.enums";
-import { UpdateUserDto } from "src/user/DTO/user.dtos";
+import { IngestionRepository } from "../repository/ingestion.repository";
 import { IngestionStateMachineService } from "./ingestion-state-machine.service";
-
+import { DocumentQueryService } from "src/documents/services/document-query.service";
 
 @Injectable()
 export class IngestionCommandService {
   constructor(
-    @Inject('IngestionWriteRepo') private readonly repo: IIngestionWriteRepo,
-    private readonly docs: DocumentsService,
+    private readonly ingestionRepo: IngestionRepository,
+    private readonly documentsService: DocumentQueryService,
     private readonly stateMachine: IngestionStateMachineService,
   ) {}
 
   async trigger(user: User, dto: CreateIngestionJobDto) {
-    await this.docs.getDocumentById(user, dto.documentId);
-    const job = await this.repo.create({
+    await this.documentsService.getById(user, dto.documentId);
+    const job = await this.ingestionRepo.create({
       documentId: dto.documentId,
       status: IngestionStatus.QUEUED,
       progress: 0,
@@ -26,30 +24,49 @@ export class IngestionCommandService {
       priority: dto.priority ?? 0,
       retryCount: 0,
       maxRetries: 3,
-    });
+    } as any);
     return job;
   }
+  
+  async triggerBulk(user: any, dto: CreateIngestionJobDto[]) {
 
-  async updateStatus(id: number, dto: UpdateUserDto) {
+    for(let doc = 0; doc < dto.length; doc++) {
+      await this.documentsService.getById(user, dto[doc].documentId);
+      const job = await this.ingestionRepo.create({
+        documentId: dto[doc].documentId,
+        status: IngestionStatus.QUEUED,
+        progress: 0,
+        triggeredById: user?.id,
+        priority: dto[doc].priority ?? 0,
+        retryCount: 0,
+        maxRetries: 3,
+      } as any);
+    }
+    return {
+      message: "Docuemnts ingested successfully"
+    };
+  }
+
+  async updateStatus(id: number, dto: UpdateIngestionJobDto) {
     const changes = this.stateMachine.computeChanges(dto);
-    await this.repo.update(id, changes);
+    await this.ingestionRepo.update({ id }, changes);
   }
 
   async cancel(user: User, id: number) {
-    const job = await this.stateMachine.ensureCanCancel(await this.repo.findById(id), user);
-    await this.repo.update(id, job.toCancelUpdate());
+    const job = this.stateMachine.ensureCanCancel(await this.ingestionRepo.findById(id), user);
+    await this.ingestionRepo.update({ id }, job.toCancelUpdate());
   }
 
   async retry(user: User, id: number) {
-    const job = await this.stateMachine.ensureCanRetry(await this.repo.findById(id), user);
-    await this.repo.update(id, job.toRetryUpdate());
+    const job = this.stateMachine.ensureCanRetry(await this.ingestionRepo.findById(id), user);
+    await this.ingestionRepo.update({ id }, job.toRetryUpdate());
   }
 
   async delete(id: number) {
-    await this.repo.delete(id);
+    await this.ingestionRepo.deleteById(id);
   }
 
   async deleteAll() {
-    await this.repo.deleteAll();
+    await this.ingestionRepo.deleteAll();
   }
 }

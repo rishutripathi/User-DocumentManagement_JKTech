@@ -20,7 +20,7 @@ export class IngestionStateMachineService {
     return changes;
   }
 
-  ensureCanCancel(job: IngestionJob, user: User): IngestionJob {
+  ensureCanCancel(job: IngestionJob | null, user: User): IngestionJob{
     if (!job) throw new NotFoundException();
     if (user.role !== 'admin' && job.triggeredById !== user.id) throw new ForbiddenException();
     if ([IngestionStatus.COMPLETED, IngestionStatus.FAILED, IngestionStatus.CANCELLED].includes(job.status)) {
@@ -29,7 +29,7 @@ export class IngestionStateMachineService {
     return job;
   }
 
-  ensureCanRetry(job: IngestionJob, user: User): IngestionJob {
+  ensureCanRetry(job: IngestionJob | null, user: User): IngestionJob {
     if (!job) throw new NotFoundException();
     if (user.role !== 'admin' && job.triggeredById !== user.id) throw new ForbiddenException();
     if (job.status !== IngestionStatus.FAILED) {

@@ -1,32 +1,22 @@
-// ingestion/services/ingestion-query.service.ts
-import { Injectable, NotFoundException, ForbiddenException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { User } from 'src/user/models/user.model';
 import { GetIngestionJobsFilterDto } from '../DTO/ingestion.dto';
-import { IIngestionReadRepo } from '../interfaces/ingestion-repositories';
 import { IngestionJob } from '../models/ingestion_jobs.model';
+import { IngestionRepository } from '../repository/ingestion.repository';
+import { PaginatedResult } from '../interfaces/ingestion-repositories';
 
-export interface PaginatedResult<T> {
-  jobs: T[];
-  pagination: {
-    totalItems: number;
-    itemCount: number;
-    itemsPerPage: number;
-    totalPages: number;
-    currentPage: number;
-  };
-}
 
 @Injectable()
 export class IngestionQueryService {
   constructor(
-    @Inject('IngestionReadRepo') private readonly repo: IIngestionReadRepo,
+    private readonly ingestionRepo: IngestionRepository,
   ) {}
 
   async list(user: User, filter: GetIngestionJobsFilterDto): Promise<PaginatedResult<IngestionJob>> {
     const { page, limit } = filter;
     const offset = (page - 1) * limit;
 
-    const [jobs, totalItems] = await this.repo.findAllWithCount({ offset, limit });
+    const { rows: jobs, count: totalItems } = await this.ingestionRepo.findAndCountAll({ offset, limit });
 
     const totalPages = Math.ceil(totalItems / limit);
     return {
@@ -42,7 +32,7 @@ export class IngestionQueryService {
   }
 
   async getById(user: User, id: number) {
-    const job = await this.repo.findById(id);
+    const job = await this.ingestionRepo.findById(id);
     if (!job) throw new NotFoundException('Job not found');
     if (user.role !== 'admin' && job.triggeredById !== user.id) {
       throw new ForbiddenException();
@@ -54,8 +44,8 @@ export class IngestionQueryService {
     const { page, limit } = filter;
     const offset = (page - 1) * limit;
 
-    const [jobs, totalItems] = await this.repo.findByUser(userId, { offset, limit });
-
+    const jobs: IngestionJob[] = await this.ingestionRepo.find({where: { triggeredById: userId }});
+    const totalItems = jobs.length;
     const totalPages = Math.ceil(totalItems / limit);
     return {
       jobs,

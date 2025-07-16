@@ -27,6 +27,14 @@ import { IngestionWebhookService } from './services/ingestion-webhook.service';
     IngestionStatsService,
     IngestionWebhookService
   ],
-  exports: []
+  exports: [
+    IngestionCommandService,
+    IngestionRepository,
+    IngestionCommandService,
+    IngestionQueryService,
+    IngestionStateMachineService,
+    IngestionStatsService,
+    IngestionWebhookService
+  ]
 })
 export class IngestionModule {}

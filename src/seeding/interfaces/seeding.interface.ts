@@ -1,7 +1,7 @@
 import { User } from "src/user/models/user.model";
 
-export interface ISeedingService {
-  seed(count: number): Promise<any>;
+export interface IDocumentSeedingService {
+  seed(user: User, count: number): Promise<any>;
 }
 
 export interface IUserService {

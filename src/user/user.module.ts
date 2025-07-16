@@ -21,6 +21,7 @@ import { UserUpdateService } from './service/user-update.service';
     UserUpdateService
   ],
   exports: [
+    UserRepository,
     UserCreateService,
     UserDeleteService,
     UserSearchService,

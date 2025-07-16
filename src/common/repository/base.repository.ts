@@ -82,7 +82,7 @@ export abstract class BaseRepository<T extends Model<T>> {
     }
   }
 
-  async findAndCountAll(query?: { offset: number, limit: number, order: any, where: any }): Promise<{ rows: T[]; count: number }> {
+  async findAndCountAll(query?: { offset?: number, limit?: number, order?: any, where?: any }): Promise<{ rows: T[]; count: number }> {
     if (!query) {
       const { rows, count }: { rows: Attributes<T>[], count: number } = await this.model.findAndCountAll();
       return { rows, count };

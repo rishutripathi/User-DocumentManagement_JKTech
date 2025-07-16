@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { IDocumentRepository } from '../interfaces/document-repository.interface';
 import { CreationAttributes } from 'sequelize';
 import { Document } from '../models/document.model';
+import { DocumentRepository } from '../repository/documents.repository';
 
 @Injectable()
 export class DocumentBatchService {
-  constructor(private readonly documentRepo: IDocumentRepository) {}
+  constructor(private readonly documentRepo: DocumentRepository) {}
 
   async bulkCreate(docs: CreationAttributes<Document>[]) {
     await this.documentRepo.createMany(docs);

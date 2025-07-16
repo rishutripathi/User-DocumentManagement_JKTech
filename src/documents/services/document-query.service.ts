@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { IDocumentRepository } from '../interfaces/document-repository.interface';
 import { PermissionService } from './permission.service';
 import { GetDocumentsFilterDto } from '../DTO/documents.dto';
 import { Document } from '../models/document.model';
 import { User } from 'src/user/models/user.model';
+import { DocumentRepository } from '../repository/documents.repository';
+
 
 @Injectable()
 export class DocumentQueryService {
   constructor(
-    private readonly documentRepo: IDocumentRepository,
+    private readonly documentRepo: DocumentRepository,
     private readonly permissionService: PermissionService,
   ) {}
 

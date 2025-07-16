@@ -1,16 +1,16 @@
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
-import { IDocumentRepository } from '../interfaces/document-repository.interface';
 import { PermissionService } from './permission.service';
 import { StorageService } from './storage.service';
 import { User } from 'src/user/models/user.model';
 import { DocumentStatus } from 'src/common/enums/database.enums';
 import { CreateDocumentDto, UpdateDocumentDto } from '../DTO/documents.dto';
+import { DocumentRepository } from '../repository/documents.repository';
 
 
 @Injectable()
 export class DocumentCommandService {
   constructor(
-    private readonly documentRepo: IDocumentRepository,
+    private readonly documentRepo: DocumentRepository,
     private readonly permissionService: PermissionService,
     private readonly storageService: StorageService,
   ) {}
@@ -25,7 +25,7 @@ export class DocumentCommandService {
       tags:  '',
       uploadedById: user.id,
       status: DocumentStatus.PENDING,
-    });
+    } as any);
     return { message: 'Document uploaded successfully', document: doc };
   }
 

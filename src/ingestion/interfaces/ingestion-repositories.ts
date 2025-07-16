@@ -1,4 +1,4 @@
-import { CreateIngestionJobDto, TriggerIngestionDto } from "../DTO/ingestion.dto";
+import { CreateIngestionJobDto } from "../DTO/ingestion.dto";
 import { IngestionJob } from "../models/ingestion_jobs.model";
 
 export interface IIngestionReadRepo {
@@ -15,4 +15,15 @@ export interface IIngestionWriteRepo {
   update(id: number, changes: Partial<IngestionJob>): Promise<void>;
   delete(id: number): Promise<void>;
   deleteAll(): Promise<void>;
+}
+
+export interface PaginatedResult<T> {
+  jobs: T[];
+  pagination: {
+    totalItems: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalPages: number;
+    currentPage: number;
+  };
 }

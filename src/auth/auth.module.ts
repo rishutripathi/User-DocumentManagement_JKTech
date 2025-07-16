@@ -26,10 +26,11 @@ import { UserUpdateService } from 'src/user/service/user-update.service';
     AuthService,
     PasswordService,
     SessionService,
-    TokenService,
+    TokenService
+    /* UserRepository,
     UserSearchService,
     UserCreateService,
-    UserUpdateService
+    UserUpdateService */
   ],
   exports: [AuthService]
 })

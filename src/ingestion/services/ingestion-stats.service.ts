@@ -1,13 +1,13 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { IIngestionReadRepo } from "../interfaces/ingestion-repositories";
+import { Injectable } from "@nestjs/common";
+import { IngestionRepository } from "../repository/ingestion.repository";
 
 
 @Injectable()
 export class IngestionStatsService {
-  constructor(@Inject('IngestionReadRepo') private readonly repo: IIngestionReadRepo) {}
+  constructor(private readonly ingestionRepo: IngestionRepository) {}
 
   async getStats() {
-    const all = await this.repo.findAll({ offset: 0, limit: 1000000 });
+    const all = await this.ingestionRepo.find();
     return all?.length;
   }
 }

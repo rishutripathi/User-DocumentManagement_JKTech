@@ -1,22 +1,26 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { IDocumentsService, IIngestionService, ISeedingService, IUserService } from "../interfaces/seeding.interface";
+import { IDocumentSeedingService } from "../interfaces/seeding.interface";
 import { Status } from "src/common/type/status.type";
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
+import { UserSearchService } from "src/user/service/user-search.service";
+import { IngestionCommandService } from "src/ingestion/services/ingestion-command.service";
+import { User } from "src/user/models/user.model";
+import { DocumentQueryService } from "src/documents/services/document-query.service";
 
 
 @Injectable()
-export class IngestionSeedingService implements ISeedingService {
+export class IngestionSeedingService implements IDocumentSeedingService {
   private readonly logger = new Logger(IngestionSeedingService.name);
 
   constructor(
-    private readonly ingestionService: IIngestionService,
-    private readonly documentService: IDocumentsService,
-    private readonly userService: IUserService
+    private readonly ingestionService: IngestionCommandService,
+    private readonly documentService: DocumentQueryService,
+    private readonly userService: UserSearchService
   ) {}
 
-  async seed(count: number = 10000) {
+  async seed(user: any, count: number = 10000) {
     this.logger.log(`Starting to seed ${count} ingestion jobs...`);
-    const allDocuments = await this.documentService.getAllDocuments();
+    const allDocuments = await this.documentService.getAll();
     const allUsers = await this.userService.getAllUsers();
     if (!allDocuments.length || !allUsers.length) throw new Error('Seed documents and users first.');
 
@@ -65,7 +69,7 @@ export class IngestionSeedingService implements ISeedingService {
         });
       }
 
-      await this.ingestionService.createBulkIngestionJobs(jobsToCreate);
+      await this.ingestionService.triggerBulk(user, jobsToCreate);
       totalCreated += currentBatchSize;
       this.logger.log(`Batch ${batch + 1}/${batches} completed. Created ${totalCreated}/${count} jobs`);
     }

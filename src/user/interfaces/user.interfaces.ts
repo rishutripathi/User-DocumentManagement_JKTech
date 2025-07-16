@@ -4,6 +4,7 @@ import { User } from "../models/user.model";
 
 export interface IUserCreator {
   createUser(createUserDto: CreateUserDto): Promise<any>;
+  createBulkUsers(createUsersDto: CreateUserDto[]): Promise<any>;
 }
 
 export interface IUserUpdater {

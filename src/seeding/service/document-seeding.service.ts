@@ -1,21 +1,23 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { IDocumentsService, ISeedingService, IUserService } from "../interfaces/seeding.interface";
+import { IDocumentSeedingService, IDocumentsService } from "../interfaces/seeding.interface";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 import { join } from "path";
 import { DocumentStatus } from "src/common/enums/database.enums";
+import { UserSearchService } from "src/user/service/user-search.service";
+import { DocumentBatchService } from "src/documents/services/document-batch.service";
 
 
 @Injectable()
-export class DocumentSeedingService implements ISeedingService {
+export class DocumentSeedingService implements IDocumentSeedingService {
   private readonly logger = new Logger(DocumentSeedingService.name);
 
   constructor(
-    private readonly documentService: IDocumentsService,
-    private readonly userService: IUserService,
+    private readonly documentService: DocumentBatchService,
+    private readonly userService: UserSearchService,
   ) {}
 
-  async seed(count: number = 100000) {
+  async seed(user, count: number = 100000) {
     this.logger.log(`Starting to seed ${count} documents...`);
     const allUsers = await this.userService.getAllUsers();
     if (!allUsers.length) throw new Error('No users found. Seed users first.');
@@ -66,7 +68,7 @@ export class DocumentSeedingService implements ISeedingService {
         });
       }
 
-      await this.documentService.uploadBulkDocuments(documentsToCreate);
+      await this.documentService.bulkCreate(documentsToCreate);
       totalCreated += currentBatchSize;
       this.logger.log(`Batch ${batch + 1}/${batches} completed. Created ${totalCreated}/${count} documents`);
     }

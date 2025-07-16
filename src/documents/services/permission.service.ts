@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/user/models/user.model';
-import { IDocumentRepository } from '../interfaces/document-repository.interface';
+import { DocumentRepository } from '../repository/documents.repository';
 
 @Injectable()
 export class PermissionService {
   constructor(
-    private readonly documentRepo: IDocumentRepository,
+    private readonly documentRepo: DocumentRepository,
   ) {}
 
   async canView(user: User, documentId: number): Promise<boolean> {

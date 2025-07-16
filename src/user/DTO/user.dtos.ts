@@ -84,8 +84,8 @@ export class UpdateUserDto {
   @Min(0)
   @Max(100)
   progress?: number;
-    errorMessage: any;
-    resultData: any;
+    errorMessage?: any;
+    resultData?: any;
 }
 
 export class UpdateUserRoleDto {

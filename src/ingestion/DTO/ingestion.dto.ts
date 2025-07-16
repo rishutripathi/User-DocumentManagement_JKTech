@@ -29,7 +29,7 @@ export class UpdateIngestionJobDto {
   @ApiProperty({ example: 'processing', enum: ['queued', 'processing', 'completed', 'failed', 'cancelled'], required: false })
   @IsOptional()
   @IsEnum(['queued', 'processing', 'completed', 'failed', 'cancelled'])
-  status?: Status | 'queued';
+  status?: Status;
 
   @ApiProperty({ example: 50.5, required: false })
   @IsOptional()

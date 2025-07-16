@@ -9,6 +9,10 @@ import { CoordinatorSeedingService } from './service/coordinator-seeding.service
 import { DocumentSeedingService } from './service/document-seeding.service';
 import { IngestionSeedingService } from './service/ingestion-seeding.service';
 import { ResetSeedingService } from './service/reset-seeding.service';
+import { UserSearchService } from 'src/user/service/user-search.service';
+import { UserDeleteService } from 'src/user/service/user-delete.service';
+import { UserCreateService } from 'src/user/service/user-create.service';
+import { IngestionCommandService } from 'src/ingestion/services/ingestion-command.service';
 
 
 @Module({
@@ -16,16 +20,23 @@ import { ResetSeedingService } from './service/reset-seeding.service';
     UserModule,
     DocumentsModule,
     IngestionModule,
-    AuthModule,
+    AuthModule
   ],
   controllers: [SeedingController],
   providers: [
     CoordinatorSeedingService,
     DocumentSeedingService,
     IngestionSeedingService,
+    IngestionCommandService,
     ResetSeedingService,
     UserSeedingService
   ],
-  exports: [],
+  exports: [
+    CoordinatorSeedingService,
+    DocumentSeedingService,
+    IngestionSeedingService,
+    ResetSeedingService,
+    UserSeedingService
+  ],
 })
 export class SeedingModule {}

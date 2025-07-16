@@ -21,7 +21,7 @@ export class CoordinatorSeedingService {
 
     results.push(await this.userSeedingService.seed(options.userCount));
     results.push(await this.documentSeedingService.seed(options.documentCount));
-    results.push(await this.ingestionSeedingService.seed(Math.floor(options.documentCount * 0.1)));
+    results.push(await this.ingestionSeedingService.seed(0, Math.floor(options.documentCount * 0.1)));
 
     const totalDuration = ((Date.now() - startTime) / 1000).toFixed(2);
     this.logger.log(`Complete seeding finished in ${totalDuration} seconds`);

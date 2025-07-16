@@ -8,7 +8,6 @@ import { PasswordService } from './password.service';
 import { TokenService } from './token.service';
 import { UserCreateService } from 'src/user/service/user-create.service';
 import { UserUpdateService } from 'src/user/service/user-update.service';
-import { GetUsersFilterDto } from 'src/user/DTO/user.dtos';
 
 
 

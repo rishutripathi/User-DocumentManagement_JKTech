@@ -1,20 +1,24 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { ISeedingService, IUserService } from "../interfaces/seeding.interface";
+import { IDocumentSeedingService } from "../interfaces/seeding.interface";
 import * as bcrypt from 'bcrypt';
-import { faker } from "@faker-js/faker/.";
+import { faker } from "@faker-js/faker";
 import { UserRoleEnum } from "src/user/enum/user.enum";
+import { UserCreateService } from "src/user/service/user-create.service";
+import { User } from "src/user/models/user.model";
 
 
 @Injectable()
-export class UserSeedingService implements ISeedingService {
+export class UserSeedingService implements IDocumentSeedingService {
+
+  private readonly logger = new Logger(UserSeedingService.name);
+
+  constructor(private readonly userService: UserCreateService) {}
+
   seedAll(options: { userCount: number; documentCount: number; }) {
     throw new Error('Method not implemented.');
   }
-  private readonly logger = new Logger(UserSeedingService.name);
 
-  constructor(private readonly userService: IUserService) {}
-
-  async seed(count: number = 1000) {
+  async seed(user: number | User, count: number = 1000) {
     this.logger.log(`Starting to seed ${count} users...`);
     const startTime = Date.now();
     const batchSize = 100;
@@ -53,7 +57,7 @@ export class UserSeedingService implements ISeedingService {
           lastLoginAt: new Date(),
         });
       }
-      await this.userService.bulkCreate(usersToCreate);
+      await this.userService.createBulkUsers(usersToCreate);
       totalCreated += currentBatchSize;
       this.logger.log(`Batch ${batch + 1}/${batches} completed. Created ${totalCreated}/${count} users`);
     }

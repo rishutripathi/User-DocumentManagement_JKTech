@@ -29,4 +29,4 @@ COPY --from=builder /src/app/node_modules ./node_modules
 COPY --from=builder /src/app/package*.json ./
 COPY --from=builder /src/app/scripts ./scripts
 
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/main.js"]
