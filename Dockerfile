@@ -1,32 +1,41 @@
-##
-#   builder stage
-##
-
-FROM node:22-alpine AS builder
+# Development stage
+FROM node:22-alpine AS development
 
 # working directory
 WORKDIR /src/app/
 
-#dependencies
+# dependencies
 COPY package*.json ./
-RUN npm install --omit=development
 
-#copy and compile
+# install all dependencies
+RUN npm ci
+
 COPY . .
+
+# Expose PORT
+EXPOSE 8000
+
+CMD [ "npm", "run", "start:dev" ]
+
+
+# Production stage
+FROM node:22-alpine AS production
+
+# working directory
+WORKDIR /src/app/
+
+# dependencies
+COPY package*.json ./
+
+# install all dependencies
+RUN npm ci --omit=dev
+
+COPY . .
+
+# build application
 RUN npm run build
 
+# Expose PORT
+EXPOSE 8000
 
-
-##
-#  runner stage
-##
-
-FROM node:22-alpine AS runner
-WORKDIR /usr/src/app
-
-COPY --from=builder /src/app/dist ./dist
-COPY --from=builder /src/app/node_modules ./node_modules
-COPY --from=builder /src/app/package*.json ./
-COPY --from=builder /src/app/scripts ./scripts
-
-CMD ["node", "dist/main.js"]
+CMD [ "npm", "run", "start:prod" ]

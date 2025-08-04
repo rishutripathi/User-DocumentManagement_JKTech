@@ -6,7 +6,7 @@ export interface IPasswordService {
 }
 
 export interface ITokenService {
-  generateToken(user: User): string;
+  generateToken(user: User): Promise<string>;
   generateTokenId(): string;
 }
 

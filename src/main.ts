@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -8,6 +8,18 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // shutdown hooks
+  app.enableShutdownHooks();
+
+  // Global prefix
+  app.setGlobalPrefix('app');
+
+  // app versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1'
+  });
 
   // Global pipes
   app.useGlobalPipes(new ValidationPipe({
@@ -43,11 +55,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+
   // Start server
-  
   const port: number = Number(process.env.PORT);
   await app.listen(port);
-  console.log(`App is listening on port: ${port}`);
+  console.log('App is listening on port:', port);
 }
-
 bootstrap();

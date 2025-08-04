@@ -1,9 +1,16 @@
 node_modules
 
-.env*
+env
 
 test
 
 **/*/.spec.ts
 
 dist/
+
+README.md
+
+eslint.config.*
+
+.git*
+

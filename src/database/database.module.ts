@@ -5,13 +5,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Dialect } from 'sequelize';
 
 
-
-@Global()
 @Module({
   imports: [
     SequelizeModule.forRootAsync({
       inject: [ ConfigService ],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => (
+        {
         dialect: configService.get<Dialect>('DATABASE_DIALECT'),
         host: configService.get<string>('PGHOST'),
         port: configService.get<number>('PGPORT'),
@@ -26,7 +25,7 @@ import { Dialect } from 'sequelize';
         },
         autoLoadModels: true,
         retryAttempts: 3,
-        logging: configService.get('NODE_ENV') == 'DEVELOPMENT' && console.log
+        logging: configService.get('NODE_ENV') == 'development' && console.log
       })
     })
   ],
@@ -36,16 +35,10 @@ import { Dialect } from 'sequelize';
   exports: [ DatabaseService ]
 })
 
+
 export class DatabaseModule {
-  async onModuleInit() {
-    try {
-      console.log('Database connection established');
-    } catch (error) {
-      console.error('Database connection error', error?.message);
-    }
+  onModuleInit() {
   }
 
-  onModuleDestroy() {
-    console.log("module destroyed");
-  }
+  onModuleDestroy() {}
 }

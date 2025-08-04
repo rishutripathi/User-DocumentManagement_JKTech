@@ -1,5 +1,3 @@
-// src/documents/controllers/documents.controller.ts
-
 import {
   Controller,
   Get,
@@ -15,8 +13,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
-  StreamableFile,
-  Req,
+  StreamableFile
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
@@ -40,6 +37,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/models/user.model';
 import { DocumentStatus } from 'src/common/enums/database.enums';
+
 
 @ApiTags('documents')
 @Controller('documents')

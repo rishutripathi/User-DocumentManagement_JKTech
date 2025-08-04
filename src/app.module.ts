@@ -7,7 +7,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import helmet from 'helmet';
-import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
 
 import { DatabaseModule } from './database/database.module';
@@ -25,7 +24,7 @@ import { SeedingModule } from './seeding/seeding.module';
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`
+      envFilePath: `env/.env.${process.env.NODE_ENV}`
     }),
 
     // Rate limiting for DDoS protection
@@ -88,7 +87,9 @@ import { SeedingModule } from './seeding/seeding.module';
     ConfigModule
   ]
 })
+
 export class AppModule implements NestModule {
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(cookieParser())
@@ -121,24 +122,6 @@ export class AppModule implements NestModule {
         frameguard: { action: 'deny' },
         xssFilter: true,
         referrerPolicy: { policy: 'same-origin' }
-      }))
-      .forRoutes('*');
-
-    // CSRF protection middleware
-    consumer
-      .apply(csurf({
-        cookie: {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production', // secure cookies in production
-          sameSite: 'strict',
-          maxAge: 3600000, // 1 hour
-        },
-        ignoredMethods: ['HEAD', 'OPTIONS'],
-        skip: (req: { path: string; headers: { [x: string]: string; }; }) => {
-          return req.path.startsWith('/api/auth/') || 
-                 req.path.startsWith('/api/public/') ||
-                 req.headers['authorization']?.startsWith('Bearer ');
-        }
       }))
       .forRoutes('*');
   }

@@ -7,15 +7,15 @@ export abstract class BaseRepository<T extends Model<T>> {
   constructor(protected readonly model: ModelStatic<T>) {}
 
   async find(query?: FindOptions<Attributes<T>>): Promise<Attributes<T>[]> {
-    return this.model.findAll(query);
+    return this.model.findAll({...query,  raw: true });
   }
 
   async findOne(query: FindOptions<Attributes<T>>): Promise<Attributes<T> | null> {
-    return this.model.findOne(query);
+    return this.model.findOne({...query,  raw: true });
   }
 
   async findById(id: T['id']): Promise<Attributes<T> | null> {
-    return this.model.findByPk(id);
+    return this.model.findByPk({...id, raw: true });
   }
 
   async create(payload: CreationAttributes<T>): Promise<Attributes<T>> {

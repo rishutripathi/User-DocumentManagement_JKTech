@@ -1,0 +1,16 @@
+services:
+  backend:
+    environment:
+      - NODE_ENV=development
+    command: npm run start:dev
+    volumes:
+      - ../:/src/app
+    # develop:
+    #   watch:
+    #     - action: sync
+    #       path: ../src
+    #       target: /src/app/src
+    #       ignore:
+    #         - node_modules/
+    #     - action: rebuild
+    #       path: ../package.json

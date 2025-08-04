@@ -3,7 +3,8 @@ services:
     container_name: udm-backend
     image: udm-backend_image
     build:
-      context: .
+      context: ..
+      target: ${NODE_ENV}
       dockerfile: Dockerfile
     ports:
       - '${PORT}:8000'
@@ -51,7 +52,7 @@ services:
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=${PGDATABASE}
     volumes:
-      - pg-uat_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PGUSER} -d ${PGDATABASE}"]
       interval: 15s
@@ -63,7 +64,6 @@ networks:
   udm:
     driver: bridge
 
-
 volumes:
   uploads:
-  pg-uat_data:
+  pg_data:

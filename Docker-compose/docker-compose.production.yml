@@ -1,0 +1,5 @@
+services:
+  backend:
+    environment:
+      - NODE_ENV=production
+    command: npm run start:prod
