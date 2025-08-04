@@ -74,7 +74,6 @@ export class DocumentsController {
     @CurrentUser() user: User,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    // RolesGuard + @Roles ensure only admin or owner can call
     const doc = await this.querySvc.getById(user, id);
     return {
       ...doc,

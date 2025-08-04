@@ -65,12 +65,15 @@ export class AuthService {
 
     // Find user by email
     const user = await this.userSService.getUserByEmail(email);
+    console.log("user:", user);
+    
     if (!user || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
     // Verify password
     const isPasswordValid = await this.passwordService.comparePassword(password, user.password);
+    console.log("isPasswordValid:::::", isPasswordValid);    
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
